@@ -1,8 +1,19 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Today from "./pages/Today";
+import Overview from "./pages/Overview";
+
 function App() {
   return (
-    <div className="App">
-      <h1>Habit Tracker</h1>
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <main>
+        <Routes>
+          <Route path="/" element={<Today />} />
+          <Route path="/overview" element={<Overview />} />
+        </Routes>
+      </main>
+    </BrowserRouter>
   );
 }
 

@@ -1,8 +1,53 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 function Overview() {
+  const [habits, setHabits] = useState([]);
+  const [completions, setCompletions] = useState({});
+
+  const fetchData = async () => {
+    const habitsResponse = await axios.get("http://localhost:3001/api/habits");
+    const habits = habitsResponse.data;
+    setHabits(habits);
+
+    // Fetch completions for each habit
+    const completionsMap = {};
+    await Promise.all(
+      habits.map(async (habit) => {
+        const response = await axios.get(
+          `http://localhost:3001/api/habits/${habit.id}/completions`
+        );
+        completionsMap[habit.id] = response.data;
+      })
+    );
+    setCompletions(completionsMap);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div>
       <h2>Overview</h2>
-      <p>All your habits and progress will appear here.</p>
+      {habits.length === 0 ? (
+        <p>No habits yet — add one on the Today page!</p>
+      ) : (
+        habits.map((habit) => (
+          <div key={habit.id}>
+            <h3>{habit.name}</h3>
+            <p>{habit.description}</p>
+            <p>Frequency: {habit.frequency}</p>
+            <p>
+              Total completions:{" "}
+              {completions[habit.id] ? completions[habit.id].length : 0}
+            </p>
+            <p>
+              Started: {new Date(habit.created_at).toLocaleDateString()}
+            </p>
+          </div>
+        ))
+      )}
     </div>
   );
 }

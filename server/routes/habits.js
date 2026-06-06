@@ -52,4 +52,16 @@ router.get("/:id/completions", (req, res) => {
   res.json(completions);
 });
 
+// GET today's completions
+router.get("/completions/today", (req, res) => {
+  const today = new Date().toISOString().split("T")[0];
+  const completions = db
+    .prepare(
+      `SELECT * FROM completions 
+       WHERE date(completed_at) = ?`
+    )
+    .all(today);
+  res.json(completions);
+});
+
 module.exports = router;

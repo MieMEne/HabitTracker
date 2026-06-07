@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Overview() {
   const [habits, setHabits] = useState([]);
   const [completions, setCompletions] = useState({});
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const habitsResponse = await axios.get("http://localhost:3001/api/habits");
@@ -41,7 +43,12 @@ function Overview() {
       ) : (
         habits.map((habit) => (
           <div key={habit.id}>
-            <h3>{habit.name}</h3>
+            <h3
+              onClick={() => navigate(`/habit/${habit.id}`)}
+              style={{ cursor: "pointer", textDecoration: "underline" }}
+            >
+              {habit.name}
+            </h3>
             <p>{habit.description}</p>
             <p>Frequency: {habit.frequency}</p>
             <p>

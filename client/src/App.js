@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Today from "./pages/Today";
 import Overview from "./pages/Overview";
 import HabitDetail from "./pages/HabitDetail";
+import './App.css';
 
 function App() {
   return (

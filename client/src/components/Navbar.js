@@ -1,12 +1,24 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav>
-      <h1>Habit Tracker</h1>
-      <div>
-        <Link to="/">Today</Link>
-        <Link to="/overview">Overview</Link>
+    <nav className="navbar">
+      <NavLink to="/" className="navbar-title">
+        Habit Tracker
+      </NavLink>
+      <div className="nav-links">
+        <NavLink
+          to="/"
+          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+        >
+          Today
+        </NavLink>
+        <NavLink
+          to="/overview"
+          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+        >
+          Overview
+        </NavLink>
       </div>
     </nav>
   );

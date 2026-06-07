@@ -17,14 +17,22 @@ router.get("/:id", (req, res) => {
 
 // Post a new habit
 router.post("/", (req, res) => {
-  const { name, description, frequency, times_per_day } = req.body;
+  const { name, description, frequency, times_per_day, color, illustration } = req.body;
   if (!name || !frequency) {
     return res.status(400).json({ error: "Name and frequency are required" });
   }
   const result = db
-    .prepare("INSERT INTO habits (name, description, frequency, times_per_day) VALUES (?, ?, ?, ?)")
-    .run(name, description, frequency, times_per_day || 1);
-  res.status(201).json({ id: result.lastInsertRowid, name, description, frequency, times_per_day: times_per_day || 1 });
+    .prepare("INSERT INTO habits (name, description, frequency, times_per_day, color, illustration) VALUES (?, ?, ?, ?, ?, ?)")
+    .run(name, description, frequency, times_per_day || 1, color || "#a8d5a2", illustration || null);
+  res.status(201).json({ 
+    id: result.lastInsertRowid, 
+    name, 
+    description, 
+    frequency, 
+    times_per_day: times_per_day || 1,
+    color: color || "#a8d5a2",
+    illustration: illustration || null
+  });
 });
 
 // Delete a habit

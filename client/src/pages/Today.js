@@ -48,6 +48,7 @@ function Today() {
   const [todayCompletions, setTodayCompletions] = useState({});
   const [allCompletions, setAllCompletions] = useState({});
   const [skippedIds, setSkippedIds] = useState([]);
+  const [showForm, setShowForm] = useState(false);
 
   const fetchHabits = async () => {
     const response = await axios.get("http://localhost:3001/api/habits");
@@ -122,15 +123,21 @@ function Today() {
   );
 
   return (
-    <div>
-      <h2>Today's Habits</h2>
+    <div className="page">
+      <div className="page-title">
+        {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}
+      </div>
+      <div className="page-subtitle">
+        {completed.length} of {dueToday.length} habits done today
+      </div>
+
       {dueToday.length === 0 ? (
-        <p>No habits due today — enjoy your rest! 🎉</p>
+        <p style={{ marginTop: "20px", color: "#b0a49a" }}>No habits due today — enjoy your rest!</p>
       ) : (
         <>
           {incomplete.length > 0 && (
             <div>
-              <h3>To Do</h3>
+              <div className="section-label">To do</div>
               {incomplete.map((habit) => (
                 <HabitCard
                   key={habit.id}
@@ -146,23 +153,33 @@ function Today() {
           )}
           {completed.length > 0 && (
             <div>
-              <h3>Completed</h3>
-              {completed.map((habit) => (
-                <HabitCard
-                  key={habit.id}
-                  habit={habit}
-                  completedCount={todayCompletions[habit.id] || 0}
-                  isCompleted={true}
-                  onComplete={handleRefresh}
-                  onDelete={handleRefresh}
-                  onSkip={handleRefresh}
-                />
-              ))}
+              <div className="section-label">Completed</div>
+              <div className="completed-grid">
+                {completed.map((habit) => (
+                  <HabitCard
+                    key={habit.id}
+                    habit={habit}
+                    completedCount={todayCompletions[habit.id] || 0}
+                    isCompleted={true}
+                    onComplete={handleRefresh}
+                    onDelete={handleRefresh}
+                    onSkip={handleRefresh}
+                  />
+                ))}
+              </div>
             </div>
           )}
         </>
       )}
-      <AddHabitForm onHabitAdded={handleRefresh} />
+      {showForm && (
+        <AddHabitForm
+          onHabitAdded={handleRefresh}
+          onClose={() => setShowForm(false)}
+        />
+      )}
+      <button className="add-habit-btn" onClick={() => setShowForm(true)}>
+        + Add a new habit
+      </button>
     </div>
   );
 }

@@ -24,24 +24,120 @@ function HabitCard({ habit, isCompleted, completedCount, onComplete, onDelete, o
     onSkip();
   };
 
+  const illustrationUrl = habit.illustration
+    ? `http://localhost:3001${habit.illustration}`
+    : null;
+
+  const lightenColor = (hex) => `${hex}33`;
+
+  if (isCompleted) {
+    return (
+      <div className="habit-card-completed">
+        {illustrationUrl ? (
+          <div className="completed-illus" style={{ background: lightenColor(habit.color) }}>
+            <img src={illustrationUrl} alt={habit.name} />
+          </div>
+        ) : (
+          <div className="completed-illus-empty" style={{ background: lightenColor(habit.color) }} />
+        )}
+        <div className="completed-body">
+          <div className="completed-name">{habit.name}</div>
+          <div className="completed-desc">{habit.description}</div>
+          <div className="completed-footer">
+            <span
+              className="frequency-tag"
+              style={{ background: lightenColor(habit.color), color: habit.color }}
+            >
+              {habit.frequency}
+            </span>
+            {habit.times_per_day > 1 ? (
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <div className="progress-dots">
+                  {Array.from({ length: habit.times_per_day }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="dot"
+                      style={{ background: habit.color }}
+                    />
+                  ))}
+                </div>
+                <span className="progress-count" style={{ color: habit.color }}>
+                  {completedCount}/{habit.times_per_day}
+                </span>
+              </div>
+            ) : (
+              <div className="check-circle" style={{ background: habit.color }}>✓</div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ opacity: isCompleted ? 0.5 : 1 }}>
-      <h3>{habit.name}</h3>
-      <p>{habit.description}</p>
-      <p>Frequency: {habit.frequency}</p>
-      {habit.times_per_day > 1 && (
-        <p>Progress: {completedCount}/{habit.times_per_day} times</p>
+    <div className="habit-card-incomplete">
+      {illustrationUrl ? (
+        <div className="habit-banner" style={{ background: lightenColor(habit.color) }}>
+          <img src={illustrationUrl} alt={habit.name} />
+        </div>
+      ) : (
+        <div className="habit-banner-empty" style={{ background: lightenColor(habit.color) }} />
       )}
-      <button onClick={handleComplete} disabled={isCompleted}>
-        {isCompleted ? "✓ Done" : "✓ Mark as done"}
-      </button>
-      {!isCompleted && (
-        <>
-          <button onClick={handleSkip}>Skip today</button>
-          <button onClick={handleShift}>Shift by 1 day</button>
-        </>
-      )}
-      <button onClick={handleDelete}>Delete</button>
+      <div className="habit-card-body">
+        <div className="habit-card-top">
+          <div>
+            <div className="habit-name">{habit.name}</div>
+            <div className="habit-desc">{habit.description}</div>
+          </div>
+        </div>
+        <div className="habit-meta">
+          <span
+            className="frequency-tag"
+            style={{ background: lightenColor(habit.color), color: habit.color }}
+          >
+            {habit.frequency}
+          </span>
+          {habit.times_per_day > 1 && (
+            <>
+              <div className="progress-dots">
+                {Array.from({ length: habit.times_per_day }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="dot"
+                    style={{ background: i < completedCount ? habit.color : "#e8e0d8" }}
+                  />
+                ))}
+              </div>
+              <span className="progress-count" style={{ color: habit.color }}>
+                {completedCount}/{habit.times_per_day}
+              </span>
+            </>
+          )}
+        </div>
+        <div className="habit-card-footer">
+          <button
+            className="main-btn"
+            style={{ background: habit.color }}
+            onClick={handleComplete}
+          >
+            {habit.times_per_day > 1 ? "Log session" : "Mark as done"}
+          </button>
+          <div className="icon-btns">
+            <div className="icon-btn" onClick={handleSkip}>
+              <span>⏭</span>
+              <div className="tooltip">Skip today</div>
+            </div>
+            <div className="icon-btn" onClick={handleShift}>
+              <span>📅</span>
+              <div className="tooltip">Shift +1 day</div>
+            </div>
+            <div className="icon-btn danger" onClick={handleDelete}>
+              <span>🗑</span>
+              <div className="tooltip">Delete habit</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -10,7 +10,6 @@ function Overview() {
     const habits = habitsResponse.data;
     setHabits(habits);
 
-    // Fetch completions for each habit
     const completionsMap = {};
     await Promise.all(
       habits.map(async (habit) => {
@@ -26,6 +25,13 @@ function Overview() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleDelete = async (habit) => {
+    if (window.confirm(`Are you sure you want to delete "${habit.name}"?`)) {
+      await axios.delete(`http://localhost:3001/api/habits/${habit.id}`);
+      fetchData();
+    }
+  };
 
   return (
     <div>
@@ -43,8 +49,9 @@ function Overview() {
               {completions[habit.id] ? completions[habit.id].length : 0}
             </p>
             <p>
-              Started: {new Date(habit.created_at).toLocaleDateString()}
+              Started: {new Date(habit.created_at.replace(" ", "T")).toLocaleDateString()}
             </p>
+            <button onClick={() => handleDelete(habit)}>Delete</button>
           </div>
         ))
       )}

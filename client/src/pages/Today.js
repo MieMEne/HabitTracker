@@ -88,12 +88,12 @@ function Today() {
   }, []);
 
   useEffect(() => {
-  const interval = setInterval(() => {
-    handleRefresh();
-  }, 60000);
+    const interval = setInterval(() => {
+      handleRefresh();
+    }, 60000);
 
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
 
   const dueToday = habits.filter((habit) =>
     isDueToday(habit, allCompletions[habit.id] || [])
@@ -111,6 +111,7 @@ function Today() {
             habit={habit}
             isCompleted={completedIds.includes(habit.id)}
             onComplete={handleRefresh}
+            onDelete={handleRefresh}
           />
         ))
       )}

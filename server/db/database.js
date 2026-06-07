@@ -39,4 +39,12 @@ try {
   db.exec("ALTER TABLE habits ADD COLUMN shift_days INTEGER NOT NULL DEFAULT 0");
 } catch (e) {}
 
+try {
+  db.exec("ALTER TABLE habits ADD COLUMN color TEXT NOT NULL DEFAULT '#a8d5a2'");
+} catch (e) {}
+
+try {
+  db.exec("ALTER TABLE habits ADD COLUMN illustration TEXT DEFAULT NULL");
+} catch (e) {}
+
 module.exports = db;

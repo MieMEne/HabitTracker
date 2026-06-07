@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function HabitCard({ habit, isCompleted, completedCount, onComplete, onDelete }) {
+function HabitCard({ habit, isCompleted, completedCount, onComplete, onDelete, onSkip }) {
   const handleComplete = async () => {
     if (isCompleted) return;
     await axios.post(`http://localhost:3001/api/habits/${habit.id}/complete`);
@@ -14,6 +14,16 @@ function HabitCard({ habit, isCompleted, completedCount, onComplete, onDelete })
     }
   };
 
+  const handleSkip = async () => {
+    await axios.post(`http://localhost:3001/api/habits/${habit.id}/skip`);
+    onSkip();
+  };
+
+  const handleShift = async () => {
+    await axios.post(`http://localhost:3001/api/habits/${habit.id}/shift`);
+    onSkip();
+  };
+
   return (
     <div style={{ opacity: isCompleted ? 0.5 : 1 }}>
       <h3>{habit.name}</h3>
@@ -25,6 +35,12 @@ function HabitCard({ habit, isCompleted, completedCount, onComplete, onDelete })
       <button onClick={handleComplete} disabled={isCompleted}>
         {isCompleted ? "✓ Done" : "✓ Mark as done"}
       </button>
+      {!isCompleted && (
+        <>
+          <button onClick={handleSkip}>Skip today</button>
+          <button onClick={handleShift}>Shift by 1 day</button>
+        </>
+      )}
       <button onClick={handleDelete}>Delete</button>
     </div>
   );

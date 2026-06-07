@@ -12,7 +12,7 @@ function isDueToday(habit, completions) {
 
   const daysSinceCreation = Math.floor(
     (today - created) / (1000 * 60 * 60 * 24)
-  );
+  ) - habit.shift_days;
 
   const lastCompletion =
     completions.length > 0
@@ -47,6 +47,7 @@ function Today() {
   const [habits, setHabits] = useState([]);
   const [todayCompletions, setTodayCompletions] = useState({});
   const [allCompletions, setAllCompletions] = useState({});
+  const [skippedIds, setSkippedIds] = useState([]);
 
   const fetchHabits = async () => {
     const response = await axios.get("http://localhost:3001/api/habits");
@@ -57,7 +58,6 @@ function Today() {
     const response = await axios.get(
       "http://localhost:3001/api/habits/completions/today"
     );
-    // Convert array to a map of habit_id -> count
     const map = {};
     response.data.forEach((c) => {
       map[c.habit_id] = c.count;
@@ -79,16 +79,25 @@ function Today() {
     setAllCompletions(completionsMap);
   };
 
+  const fetchTodaySkips = async () => {
+    const response = await axios.get(
+      "http://localhost:3001/api/habits/skips/today"
+    );
+    setSkippedIds(response.data.map((s) => s.habit_id));
+  };
+
   const handleRefresh = () => {
     fetchHabits();
     fetchTodayCompletions();
     fetchAllCompletions();
+    fetchTodaySkips();
   };
 
   useEffect(() => {
     fetchHabits();
     fetchTodayCompletions();
     fetchAllCompletions();
+    fetchTodaySkips();
   }, []);
 
   useEffect(() => {
@@ -98,8 +107,10 @@ function Today() {
     return () => clearInterval(interval);
   }, []);
 
-  const dueToday = habits.filter((habit) =>
-    isDueToday(habit, allCompletions[habit.id] || [])
+  const dueToday = habits.filter(
+    (habit) =>
+      isDueToday(habit, allCompletions[habit.id] || []) &&
+      !skippedIds.includes(habit.id)
   );
 
   const incomplete = dueToday.filter(
@@ -128,6 +139,7 @@ function Today() {
                   isCompleted={false}
                   onComplete={handleRefresh}
                   onDelete={handleRefresh}
+                  onSkip={handleRefresh}
                 />
               ))}
             </div>
@@ -143,6 +155,7 @@ function Today() {
                   isCompleted={true}
                   onComplete={handleRefresh}
                   onDelete={handleRefresh}
+                  onSkip={handleRefresh}
                 />
               ))}
             </div>

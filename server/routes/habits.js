@@ -66,4 +66,45 @@ router.get("/completions/today", (req, res) => {
   res.json(completions);
 });
 
+// POST skip a habit for today
+router.post("/:id/skip", (req, res) => {
+  const habit = db.prepare("SELECT * FROM habits WHERE id = ?").get(req.params.id);
+  if (!habit) return res.status(404).json({ error: "Habit not found" });
+  const result = db
+    .prepare("INSERT INTO skips (habit_id) VALUES (?)")
+    .run(req.params.id);
+  res.status(201).json({ id: result.lastInsertRowid, habit_id: req.params.id });
+});
+
+// GET today's skips
+router.get("/skips/today", (req, res) => {
+  const today = new Date().toISOString().split("T")[0];
+  const skips = db
+    .prepare(
+      `SELECT * FROM skips 
+       WHERE date(skipped_at) = ?`
+    )
+    .all(today);
+  res.json(skips);
+});
+
+// GET all skips for a habit
+router.get("/:id/skips", (req, res) => {
+  const skips = db
+    .prepare("SELECT * FROM skips WHERE habit_id = ?")
+    .all(req.params.id);
+  res.json(skips);
+});
+
+// POST shift all future instances by 1 day
+router.post("/:id/shift", (req, res) => {
+  const habit = db.prepare("SELECT * FROM habits WHERE id = ?").get(req.params.id);
+  if (!habit) return res.status(404).json({ error: "Habit not found" });
+  db.prepare("UPDATE habits SET shift_days = shift_days + 1 WHERE id = ?")
+    .run(req.params.id);
+  // Also skip today since we're shifting
+  db.prepare("INSERT INTO skips (habit_id) VALUES (?)").run(req.params.id);
+  res.json({ message: "Habit shifted by 1 day" });
+});
+
 module.exports = router;

@@ -45,7 +45,7 @@ function isDueToday(habit, completions) {
 
 function Today() {
   const [habits, setHabits] = useState([]);
-  const [completedIds, setCompletedIds] = useState([]);
+  const [todayCompletions, setTodayCompletions] = useState({});
   const [allCompletions, setAllCompletions] = useState({});
 
   const fetchHabits = async () => {
@@ -57,8 +57,12 @@ function Today() {
     const response = await axios.get(
       "http://localhost:3001/api/habits/completions/today"
     );
-    const ids = response.data.map((c) => c.habit_id);
-    setCompletedIds(ids);
+    // Convert array to a map of habit_id -> count
+    const map = {};
+    response.data.forEach((c) => {
+      map[c.habit_id] = c.count;
+    });
+    setTodayCompletions(map);
   };
 
   const fetchAllCompletions = async () => {
@@ -91,12 +95,19 @@ function Today() {
     const interval = setInterval(() => {
       handleRefresh();
     }, 60000);
-
     return () => clearInterval(interval);
   }, []);
 
   const dueToday = habits.filter((habit) =>
     isDueToday(habit, allCompletions[habit.id] || [])
+  );
+
+  const incomplete = dueToday.filter(
+    (habit) => (todayCompletions[habit.id] || 0) < habit.times_per_day
+  );
+
+  const completed = dueToday.filter(
+    (habit) => (todayCompletions[habit.id] || 0) >= habit.times_per_day
   );
 
   return (
@@ -105,15 +116,38 @@ function Today() {
       {dueToday.length === 0 ? (
         <p>No habits due today — enjoy your rest! 🎉</p>
       ) : (
-        dueToday.map((habit) => (
-          <HabitCard
-            key={habit.id}
-            habit={habit}
-            isCompleted={completedIds.includes(habit.id)}
-            onComplete={handleRefresh}
-            onDelete={handleRefresh}
-          />
-        ))
+        <>
+          {incomplete.length > 0 && (
+            <div>
+              <h3>To Do</h3>
+              {incomplete.map((habit) => (
+                <HabitCard
+                  key={habit.id}
+                  habit={habit}
+                  completedCount={todayCompletions[habit.id] || 0}
+                  isCompleted={false}
+                  onComplete={handleRefresh}
+                  onDelete={handleRefresh}
+                />
+              ))}
+            </div>
+          )}
+          {completed.length > 0 && (
+            <div>
+              <h3>Completed</h3>
+              {completed.map((habit) => (
+                <HabitCard
+                  key={habit.id}
+                  habit={habit}
+                  completedCount={todayCompletions[habit.id] || 0}
+                  isCompleted={true}
+                  onComplete={handleRefresh}
+                  onDelete={handleRefresh}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
       <AddHabitForm onHabitAdded={handleRefresh} />
     </div>

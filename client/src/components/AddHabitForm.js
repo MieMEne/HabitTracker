@@ -5,6 +5,7 @@ function AddHabitForm({ onHabitAdded }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [frequency, setFrequency] = useState("daily");
+  const [timesPerDay, setTimesPerDay] = useState(1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,11 +15,13 @@ function AddHabitForm({ onHabitAdded }) {
       name,
       description,
       frequency,
+      times_per_day: timesPerDay,
     });
 
     setName("");
     setDescription("");
     setFrequency("daily");
+    setTimesPerDay(1);
     onHabitAdded();
   };
 
@@ -55,6 +58,16 @@ function AddHabitForm({ onHabitAdded }) {
           <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
         </select>
+      </div>
+
+      <div>
+        <label>Times per day</label>
+        <input
+          type="number"
+          min="1"
+          value={timesPerDay}
+          onChange={(e) => setTimesPerDay(parseInt(e.target.value))}
+        />
       </div>
 
       <button type="submit">Add Habit</button>

@@ -17,14 +17,14 @@ router.get("/:id", (req, res) => {
 
 // Post a new habit
 router.post("/", (req, res) => {
-  const { name, description, frequency } = req.body;
+  const { name, description, frequency, times_per_day } = req.body;
   if (!name || !frequency) {
     return res.status(400).json({ error: "Name and frequency are required" });
   }
   const result = db
-    .prepare("INSERT INTO habits (name, description, frequency) VALUES (?, ?, ?)")
-    .run(name, description, frequency);
-  res.status(201).json({ id: result.lastInsertRowid, name, description, frequency });
+    .prepare("INSERT INTO habits (name, description, frequency, times_per_day) VALUES (?, ?, ?, ?)")
+    .run(name, description, frequency, times_per_day || 1);
+  res.status(201).json({ id: result.lastInsertRowid, name, description, frequency, times_per_day: times_per_day || 1 });
 });
 
 // Delete a habit
@@ -57,8 +57,10 @@ router.get("/completions/today", (req, res) => {
   const today = new Date().toISOString().split("T")[0];
   const completions = db
     .prepare(
-      `SELECT * FROM completions 
-       WHERE date(completed_at) = ?`
+      `SELECT habit_id, COUNT(*) as count 
+       FROM completions 
+       WHERE date(completed_at) = ?
+       GROUP BY habit_id`
     )
     .all(today);
   res.json(completions);

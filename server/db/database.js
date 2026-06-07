@@ -14,6 +14,7 @@ db.exec(`
     name TEXT NOT NULL,
     description TEXT,
     frequency TEXT NOT NULL,
+    times_per_day INTEGER NOT NULL DEFAULT 1,
     created_at TEXT DEFAULT (datetime('now'))
   );
 
@@ -24,5 +25,12 @@ db.exec(`
     FOREIGN KEY (habit_id) REFERENCES habits(id) ON DELETE CASCADE
   );
 `);
+
+// Add times_per_day column if it doesn't exist yet
+try {
+  db.exec("ALTER TABLE habits ADD COLUMN times_per_day INTEGER NOT NULL DEFAULT 1");
+} catch (e) {
+  // Column already exists, ignore
+}
 
 module.exports = db;

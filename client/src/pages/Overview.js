@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import EditHabitForm from "../components/EditHabitForm";
+import { calculateStreak } from "../utils";
 
 function OverviewCard({ habit, completions, onDelete, onEdit, navigate, lightenColor }) {
   const [showEdit, setShowEdit] = useState(false);
+  const streak = calculateStreak(completions[habit.id] || [], habit.frequency);
 
   return (
     <>
@@ -30,6 +32,11 @@ function OverviewCard({ habit, completions, onDelete, onEdit, navigate, lightenC
             {habit.frequency} · started{" "}
             {new Date(habit.created_at.replace(" ", "T")).toLocaleDateString()}
           </div>
+          {streak > 0 && (
+            <span className="streak-badge">
+              🔥 {streak} days
+            </span>
+          )}
           <div className="overview-footer">
             <span
               className="frequency-tag"

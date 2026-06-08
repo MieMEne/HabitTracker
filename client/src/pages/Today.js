@@ -128,51 +128,51 @@ function Today() {
   }, []);
 
   const dueToday = habits.filter(
-  (habit) =>
-    isDueToday(habit, allCompletions[habit.id] || [], todayCompletions[habit.id] || 0) &&
-    !skippedIds.includes(habit.id)
-);
+    (habit) =>
+      isDueToday(habit, allCompletions[habit.id] || [], todayCompletions[habit.id] || 0) &&
+      !skippedIds.includes(habit.id)
+  );
 
   const incomplete = dueToday.filter(
-  (habit) => (todayCompletions[habit.id] || 0) < habit.times_per_day
-);
+    (habit) => (todayCompletions[habit.id] || 0) < habit.times_per_day
+  );
 
-const completed = dueToday.filter(
-  (habit) => (todayCompletions[habit.id] || 0) >= habit.times_per_day
-);
+  const completed = dueToday.filter(
+    (habit) => (todayCompletions[habit.id] || 0) >= habit.times_per_day
+  );
 
-const completedPeriodic = habits.filter((habit) => {
-  if (skippedIds.includes(habit.id)) return false;
-  if (habit.frequency !== "weekly" && habit.frequency !== "monthly") return false;
+  const completedPeriodic = habits.filter((habit) => {
+    if (skippedIds.includes(habit.id)) return false;
+    if (habit.frequency !== "weekly" && habit.frequency !== "monthly") return false;
 
-  const allHabitCompletions = allCompletions[habit.id] || [];
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    const allHabitCompletions = allCompletions[habit.id] || [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  if (habit.frequency === "weekly") {
-    const startOfCurrentWeek = new Date(today);
-    startOfCurrentWeek.setDate(today.getDate() - ((today.getDay() + 6) % 7));
-    startOfCurrentWeek.setHours(0, 0, 0, 0);
-    const completionsThisWeek = allHabitCompletions.filter((c) => {
-      const d = new Date(c.completed_at.replace(" ", "T"));
-      d.setHours(0, 0, 0, 0);
-      return d >= startOfCurrentWeek;
-    });
-    return completionsThisWeek.length >= habit.times_per_day;
-  }
+    if (habit.frequency === "weekly") {
+      const startOfCurrentWeek = new Date(today);
+      startOfCurrentWeek.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+      startOfCurrentWeek.setHours(0, 0, 0, 0);
+      const completionsThisWeek = allHabitCompletions.filter((c) => {
+        const d = new Date(c.completed_at.replace(" ", "T"));
+        d.setHours(0, 0, 0, 0);
+        return d >= startOfCurrentWeek;
+      });
+      return completionsThisWeek.length >= habit.times_per_day;
+    }
 
-  if (habit.frequency === "monthly") {
-    const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const completionsThisMonth = allHabitCompletions.filter((c) => {
-      const d = new Date(c.completed_at.replace(" ", "T"));
-      d.setHours(0, 0, 0, 0);
-      return d >= startOfCurrentMonth;
-    });
-    return completionsThisMonth.length >= habit.times_per_day;
-  }
+    if (habit.frequency === "monthly") {
+      const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const completionsThisMonth = allHabitCompletions.filter((c) => {
+        const d = new Date(c.completed_at.replace(" ", "T"));
+        d.setHours(0, 0, 0, 0);
+        return d >= startOfCurrentMonth;
+      });
+      return completionsThisMonth.length >= habit.times_per_day;
+    }
 
-  return false;
-});
+    return false;
+  });
 
   return (
     <div className="page">
@@ -195,6 +195,7 @@ const completedPeriodic = habits.filter((habit) => {
                   key={habit.id}
                   habit={habit}
                   completedCount={todayCompletions[habit.id] || 0}
+                  completions={allCompletions[habit.id] || []}
                   isCompleted={false}
                   onComplete={handleRefresh}
                   onDelete={handleRefresh}
@@ -212,6 +213,7 @@ const completedPeriodic = habits.filter((habit) => {
                     key={habit.id}
                     habit={habit}
                     completedCount={todayCompletions[habit.id] || 0}
+                    completions={allCompletions[habit.id] || []}
                     isCompleted={true}
                     onComplete={handleRefresh}
                     onDelete={handleRefresh}
@@ -223,6 +225,7 @@ const completedPeriodic = habits.filter((habit) => {
                     key={habit.id}
                     habit={habit}
                     completedCount={todayCompletions[habit.id] || 0}
+                    completions={allCompletions[habit.id] || []}
                     isCompleted={true}
                     onComplete={handleRefresh}
                     onDelete={handleRefresh}

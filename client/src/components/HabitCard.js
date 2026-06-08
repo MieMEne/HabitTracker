@@ -2,8 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import EditHabitForm from "./EditHabitForm";
 import { useNavigate } from "react-router-dom";
+import { calculateStreak } from "../utils";
 
-function HabitCard({ habit, isCompleted, completedCount, onComplete, onDelete, onSkip }) {
+function HabitCard({ habit, isCompleted, completedCount, completions, onComplete, onDelete, onSkip }) {
     const [showEdit, setShowEdit] = useState(false);
 
     const navigate = useNavigate();
@@ -41,6 +42,8 @@ function HabitCard({ habit, isCompleted, completedCount, onComplete, onDelete, o
 
     const lightenColor = (hex) => `${hex}33`;
 
+    const streak = calculateStreak(completions || [], habit.frequency);
+
     if (isCompleted) {
         return (
             <>
@@ -55,6 +58,11 @@ function HabitCard({ habit, isCompleted, completedCount, onComplete, onDelete, o
                     <div className="completed-body">
                         <div className="completed-name">{habit.name}</div>
                         <div className="completed-desc">{habit.description}</div>
+                        {streak > 0 && (
+                            <span className="streak-badge">
+                                🔥 {streak} days
+                            </span>
+                        )}
                         <div className="completed-footer">
                             <span
                                 className="frequency-tag"
@@ -124,6 +132,11 @@ function HabitCard({ habit, isCompleted, completedCount, onComplete, onDelete, o
                         >
                             {habit.frequency}
                         </span>
+                        {streak > 0 && (
+                            <span className="streak-badge">
+                                🔥 {streak} {streak === 1 ? "day" : "days"}
+                            </span>
+                        )}
                         {habit.times_per_day > 1 && (
                             <>
                                 <div className="progress-dots">

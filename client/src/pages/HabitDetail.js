@@ -135,7 +135,26 @@ function HabitDetail() {
 
   if (!habit) return <p>Loading...</p>;
 
-  const lightenColor = (hex) => `${hex}33`;
+  const lightBg = (hex) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const mixed_r = Math.round(r + (255 - r) * 0.7);
+    const mixed_g = Math.round(g + (255 - g) * 0.7);
+    const mixed_b = Math.round(b + (255 - b) * 0.7);
+    return `rgb(${mixed_r}, ${mixed_g}, ${mixed_b})`;
+  };
+
+  const darkText = (hex) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const mixed_r = Math.round(r * 0.6);
+    const mixed_g = Math.round(g * 0.6);
+    const mixed_b = Math.round(b * 0.6);
+    return `rgb(${mixed_r}, ${mixed_g}, ${mixed_b})`;
+  };
+
   const streak = calculateStreak(completions, habit.frequency);
   const bestStreak = calculateBestStreak(completions, habit.frequency);
 
@@ -146,36 +165,36 @@ function HabitDetail() {
       </button>
 
       {habit.illustration ? (
-        <div className="detail-banner" style={{ background: lightenColor(habit.color) }}>
+        <div className="detail-banner" style={{ background: lightBg(habit.color) }}>
           <img
             src={`http://localhost:3001${habit.illustration}`}
             alt={habit.name}
           />
         </div>
       ) : (
-        <div className="detail-banner-empty" style={{ background: lightenColor(habit.color) }} />
+        <div className="detail-banner-empty" style={{ background: lightBg(habit.color) }} />
       )}
 
       <div className="detail-title">{habit.name}</div>
       <div className="detail-meta">{habit.description}</div>
 
       <div className="stats-row">
-        <span className="stat-pill" style={{ background: lightenColor(habit.color), color: habit.color }}>
+        <span className="stat-pill" style={{ background: lightBg(habit.color), color: darkText(habit.color) }}>
           {habit.frequency}
         </span>
-        <span className="stat-pill" style={{ background: "#edf6ea", color: "#4a7c42" }}>
+        <span className="stat-pill" style={{ background: "#edf6ea", color: "#2d5e27" }}>
           {completions.length} completions
         </span>
-        <span className="stat-pill" style={{ background: "#f5f0ea", color: "#6a5e55" }}>
+        <span className="stat-pill" style={{ background: "#f5f0ea", color: "#4a3e35" }}>
           {skips.length} skips
         </span>
-        <span className="stat-pill" style={{ background: "#f5f0ea", color: "#6a5e55" }}>
+        <span className="stat-pill" style={{ background: "#f5f0ea", color: "#4a3e35" }}>
           Since {new Date(habit.created_at.replace(" ", "T")).toLocaleDateString()}
         </span>
-        <span className="stat-pill" style={{ background: "#fef5e0", color: "#8c5a10" }}>
+        <span className="stat-pill" style={{ background: "#fde8b8", color: "#7a4a08" }}>
           🔥 {streak} day streak
         </span>
-        <span className="stat-pill" style={{ background: "#fef5e0", color: "#8c5a10" }}>
+        <span className="stat-pill" style={{ background: "#fde8b8", color: "#7a4a08" }}>
           Best: {bestStreak} days
         </span>
       </div>

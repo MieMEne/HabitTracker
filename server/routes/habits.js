@@ -115,4 +115,21 @@ router.post("/:id/shift", (req, res) => {
   res.json({ message: "Habit shifted by 1 day" });
 });
 
+// PUT update a habit
+router.put("/:id", (req, res) => {
+  const { name, description, frequency, times_per_day, color, illustration } = req.body;
+  if (!name || !frequency) {
+    return res.status(400).json({ error: "Name and frequency are required" });
+  }
+  const result = db
+    .prepare(
+      `UPDATE habits 
+       SET name = ?, description = ?, frequency = ?, times_per_day = ?, color = ?, illustration = ?
+       WHERE id = ?`
+    )
+    .run(name, description, frequency, times_per_day || 1, color, illustration, req.params.id);
+  if (result.changes === 0) return res.status(404).json({ error: "Habit not found" });
+  res.json({ id: req.params.id, name, description, frequency, times_per_day, color, illustration });
+});
+
 module.exports = router;

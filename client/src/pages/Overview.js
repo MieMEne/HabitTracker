@@ -35,32 +35,60 @@ function Overview() {
     }
   };
 
+  const lightenColor = (hex) => `${hex}33`;
+
   return (
-    <div>
-      <h2>Overview</h2>
+    <div className="page">
+      <div className="page-title">Overview</div>
+      <div className="page-subtitle">{habits.length} habits tracked</div>
+
       {habits.length === 0 ? (
-        <p>No habits yet — add one on the Today page!</p>
+        <p style={{ marginTop: "20px", color: "#b0a49a" }}>
+          No habits yet — add one on the Today page!
+        </p>
       ) : (
-        habits.map((habit) => (
-          <div key={habit.id}>
-            <h3
-              onClick={() => navigate(`/habit/${habit.id}`)}
-              style={{ cursor: "pointer", textDecoration: "underline" }}
-            >
-              {habit.name}
-            </h3>
-            <p>{habit.description}</p>
-            <p>Frequency: {habit.frequency}</p>
-            <p>
-              Total completions:{" "}
-              {completions[habit.id] ? completions[habit.id].length : 0}
-            </p>
-            <p>
-              Started: {new Date(habit.created_at.replace(" ", "T")).toLocaleDateString()}
-            </p>
-            <button onClick={() => handleDelete(habit)}>Delete</button>
-          </div>
-        ))
+        <div className="overview-grid">
+          {habits.map((habit) => (
+            <div key={habit.id} className="overview-card">
+              {habit.illustration ? (
+                <div className="overview-illus" style={{ background: lightenColor(habit.color) }}>
+                  <img
+                    src={`http://localhost:3001${habit.illustration}`}
+                    alt={habit.name}
+                  />
+                </div>
+              ) : (
+                <div className="overview-illus-empty" style={{ background: lightenColor(habit.color) }} />
+              )}
+              <div className="overview-body">
+                <div
+                  className="overview-name"
+                  onClick={() => navigate(`/habit/${habit.id}`)}
+                >
+                  {habit.name}
+                </div>
+                <div className="overview-meta">
+                  {habit.frequency} · started{" "}
+                  {new Date(habit.created_at.replace(" ", "T")).toLocaleDateString()}
+                </div>
+                <div className="overview-footer">
+                  <span
+                    className="frequency-tag"
+                    style={{ background: lightenColor(habit.color), color: habit.color }}
+                  >
+                    {completions[habit.id] ? completions[habit.id].length : 0} completions
+                  </span>
+                  <button
+                    className="overview-delete"
+                    onClick={() => handleDelete(habit)}
+                  >
+                    🗑
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

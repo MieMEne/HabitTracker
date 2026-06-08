@@ -22,7 +22,7 @@ function OverviewCard({ habit, completions, onDelete, onEdit, navigate, lightenC
         <div className="overview-body">
           <div
             className="overview-name"
-            onClick={() => navigate(`/habit/${habit.id}`)}
+            onClick={() => navigate(`/habit/${habit.id}`, { state: { from: "overview" } })}
           >
             {habit.name}
           </div>

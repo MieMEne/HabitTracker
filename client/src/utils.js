@@ -1,13 +1,15 @@
 export function calculateStreak(completions, frequency) {
   if (!completions || completions.length === 0) return 0;
 
-  const today = new Date();
+  const toLocal = (dateStr) =>
+    new Date(new Date(dateStr.replace(" ", "T")).toLocaleString("en-US", { timeZone: "Europe/Copenhagen" }));
+
+  const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Europe/Copenhagen" }));
   today.setHours(0, 0, 0, 0);
 
-  // Get unique completion dates sorted newest first
   const dates = [...new Set(
     completions.map((c) => {
-      const d = new Date(c.completed_at.replace(" ", "T"));
+      const d = toLocal(c.completed_at);
       d.setHours(0, 0, 0, 0);
       return d.getTime();
     })
@@ -39,7 +41,6 @@ export function calculateStreak(completions, frequency) {
     }
   };
 
-  // For weekly/monthly check by period
   if (frequency === "weekly" || frequency === "monthly") {
     const periods = [...new Set(dates.map((d) => getPeriodStart(d)))]
       .sort((a, b) => b - a);
@@ -65,12 +66,10 @@ export function calculateStreak(completions, frequency) {
     return streak;
   }
 
-  // For daily/every other day/every 4 days
   const gap = getExpectedGap();
   let streak = 0;
   let expectedDate = new Date(today);
 
-  // Allow today or yesterday to start the streak
   const mostRecent = dates[0];
   const daysSinceMostRecent = Math.floor((today - mostRecent) / (1000 * 60 * 60 * 24));
   if (daysSinceMostRecent > gap) return 0;
@@ -93,9 +92,12 @@ export function calculateStreak(completions, frequency) {
 export function calculateBestStreak(completions, frequency) {
   if (!completions || completions.length === 0) return 0;
 
+  const toLocal = (dateStr) =>
+    new Date(new Date(dateStr.replace(" ", "T")).toLocaleString("en-US", { timeZone: "Europe/Copenhagen" }));
+
   const dates = [...new Set(
     completions.map((c) => {
-      const d = new Date(c.completed_at.replace(" ", "T"));
+      const d = toLocal(c.completed_at);
       d.setHours(0, 0, 0, 0);
       return d.getTime();
     })

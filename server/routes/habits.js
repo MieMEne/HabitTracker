@@ -60,21 +60,21 @@ router.get("/:id/completions", (req, res) => {
   res.json(completions);
 });
 
-// GET today's completions
+// Get today's completions
 router.get("/completions/today", (req, res) => {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Copenhagen" });
   const completions = db
     .prepare(
       `SELECT habit_id, COUNT(*) as count 
        FROM completions 
-       WHERE date(completed_at) = ?
+       WHERE date(completed_at, 'localtime') = ?
        GROUP BY habit_id`
     )
     .all(today);
   res.json(completions);
 });
 
-// POST skip a habit for today
+// Post skip a habit for today
 router.post("/:id/skip", (req, res) => {
   const habit = db.prepare("SELECT * FROM habits WHERE id = ?").get(req.params.id);
   if (!habit) return res.status(404).json({ error: "Habit not found" });
@@ -84,19 +84,19 @@ router.post("/:id/skip", (req, res) => {
   res.status(201).json({ id: result.lastInsertRowid, habit_id: req.params.id });
 });
 
-// GET today's skips
+// Get today's skips
 router.get("/skips/today", (req, res) => {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Copenhagen" });
   const skips = db
     .prepare(
       `SELECT * FROM skips 
-       WHERE date(skipped_at) = ?`
+       WHERE date(skipped_at, 'localtime') = ?`
     )
     .all(today);
   res.json(skips);
 });
 
-// GET all skips for a habit
+// Get all skips for a habit
 router.get("/:id/skips", (req, res) => {
   const skips = db
     .prepare("SELECT * FROM skips WHERE habit_id = ?")
@@ -104,7 +104,7 @@ router.get("/:id/skips", (req, res) => {
   res.json(skips);
 });
 
-// POST shift all future instances by 1 day
+// Post shift all future instances by 1 day
 router.post("/:id/shift", (req, res) => {
   const habit = db.prepare("SELECT * FROM habits WHERE id = ?").get(req.params.id);
   if (!habit) return res.status(404).json({ error: "Habit not found" });
@@ -115,7 +115,7 @@ router.post("/:id/shift", (req, res) => {
   res.json({ message: "Habit shifted by 1 day" });
 });
 
-// PUT update a habit
+// Put update a habit
 router.put("/:id", (req, res) => {
   const { name, description, frequency, times_per_day, color, illustration } = req.body;
   if (!name || !frequency) {

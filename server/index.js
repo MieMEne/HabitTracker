@@ -14,6 +14,9 @@ app.use(express.json());
 // Serve illustration images as static files
 app.use("/illustrations", express.static(path.join(__dirname, "illustrations")));
 
+// Serve logo as static file
+app.use("/logo", express.static(path.join(__dirname, "logo")));
+
 // List all available illustrations
 app.get("/api/illustrations", (req, res) => {
   const fs = require("fs");

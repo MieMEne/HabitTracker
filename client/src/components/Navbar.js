@@ -4,6 +4,11 @@ function Navbar() {
   return (
     <nav className="navbar">
       <NavLink to="/" className="navbar-title">
+        <img
+          src="http://localhost:3001/logo/Logo.svg"
+          alt="Habit Tracker Logo"
+          className="navbar-logo"
+        />
         Habit Tracker
       </NavLink>
       <div className="nav-links">

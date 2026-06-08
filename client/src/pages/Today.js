@@ -175,77 +175,79 @@ function Today() {
   });
 
   return (
-    <div className="page">
-      <div className="page-title">
-        {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}
-      </div>
-      <div className="page-subtitle">
-        {completed.length + completedPeriodic.length} of {dueToday.length + completedPeriodic.length} habits done today
-      </div>
+    <div className="page-wrapper">
+      <div className="page">
+        <div className="page-title">
+          {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}
+        </div>
+        <div className="page-subtitle">
+          {completed.length + completedPeriodic.length} of {dueToday.length + completedPeriodic.length} habits done today
+        </div>
 
-      {dueToday.length === 0 && completedPeriodic.length === 0 ? (
-        <p style={{ marginTop: "20px", color: "#b0a49a" }}>No habits due today — enjoy your rest!</p>
-      ) : (
-        <>
-          {incomplete.length > 0 && (
-            <div>
-              <div className="section-label">To do</div>
-              {incomplete.map((habit) => (
-                <HabitCard
-                  key={habit.id}
-                  habit={habit}
-                  completedCount={todayCompletions[habit.id] || 0}
-                  completions={allCompletions[habit.id] || []}
-                  isCompleted={false}
-                  onComplete={handleRefresh}
-                  onDelete={handleRefresh}
-                  onSkip={handleRefresh}
-                />
-              ))}
-            </div>
-          )}
-          {(completed.length > 0 || completedPeriodic.length > 0) && (
-            <div>
-              <div className="section-label">Completed</div>
-              <div className="completed-grid">
-                {completed.map((habit) => (
+        {dueToday.length === 0 && completedPeriodic.length === 0 ? (
+          <p style={{ marginTop: "20px", color: "#b0a49a" }}>No habits due today — enjoy your rest!</p>
+        ) : (
+          <>
+            {incomplete.length > 0 && (
+              <div>
+                <div className="section-label">To do</div>
+                {incomplete.map((habit) => (
                   <HabitCard
                     key={habit.id}
                     habit={habit}
                     completedCount={todayCompletions[habit.id] || 0}
                     completions={allCompletions[habit.id] || []}
-                    isCompleted={true}
-                    onComplete={handleRefresh}
-                    onDelete={handleRefresh}
-                    onSkip={handleRefresh}
-                  />
-                ))}
-                {completedPeriodic.map((habit) => (
-                  <HabitCard
-                    key={habit.id}
-                    habit={habit}
-                    completedCount={todayCompletions[habit.id] || 0}
-                    completions={allCompletions[habit.id] || []}
-                    isCompleted={true}
+                    isCompleted={false}
                     onComplete={handleRefresh}
                     onDelete={handleRefresh}
                     onSkip={handleRefresh}
                   />
                 ))}
               </div>
-            </div>
-          )}
-        </>
-      )}
-      {showForm && (
-        <AddHabitForm
-          onHabitAdded={handleRefresh}
-          onClose={() => setShowForm(false)}
-        />
-      )}
-      <button className="add-habit-btn" onClick={() => setShowForm(true)}>
-        + Add a new habit
-      </button>
+            )}
+            {(completed.length > 0 || completedPeriodic.length > 0) && (
+              <div>
+                <div className="section-label">Completed</div>
+                <div className="completed-grid">
+                  {completed.map((habit) => (
+                    <HabitCard
+                      key={habit.id}
+                      habit={habit}
+                      completedCount={todayCompletions[habit.id] || 0}
+                      completions={allCompletions[habit.id] || []}
+                      isCompleted={true}
+                      onComplete={handleRefresh}
+                      onDelete={handleRefresh}
+                      onSkip={handleRefresh}
+                    />
+                  ))}
+                  {completedPeriodic.map((habit) => (
+                    <HabitCard
+                      key={habit.id}
+                      habit={habit}
+                      completedCount={todayCompletions[habit.id] || 0}
+                      completions={allCompletions[habit.id] || []}
+                      isCompleted={true}
+                      onComplete={handleRefresh}
+                      onDelete={handleRefresh}
+                      onSkip={handleRefresh}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+        {showForm && (
+          <AddHabitForm
+            onHabitAdded={handleRefresh}
+            onClose={() => setShowForm(false)}
+          />
+        )}
+        <button className="add-habit-btn" onClick={() => setShowForm(true)}>
+          + Add a new habit
+        </button>
+      </div>
     </div>
   );
 }

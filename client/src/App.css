@@ -6,7 +6,9 @@
 }
 
 body {
-  background: #fdf8f2;
+  background-color: #fdf8f2;
+  background-image: radial-gradient(#d4c9bc 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #3a3228;
 }
@@ -17,8 +19,9 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 14px 24px;
-  background: #fdf8f2;
-  border-bottom: 0.5px solid #ede5da;
+  background: #f0e6d8;
+  border-bottom: 1px solid #c8b8a8;
+  box-shadow: 0 2px 8px rgba(58, 50, 40, 0.08);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -29,8 +32,8 @@ body {
   align-items: center;
   gap: 10px;
   font-size: 17px;
-  font-weight: 500;
-  color: #3a3228;
+  font-weight: 600;
+  color: #2a2018;
   text-decoration: none;
 }
 
@@ -49,36 +52,37 @@ body {
   padding: 6px 18px;
   border-radius: 999px;
   font-size: 13px;
-  color: #9a8e85;
+  color: #6a5e55;
   border: 0.5px solid transparent;
   background: transparent;
   cursor: pointer;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .nav-link.active {
-  background: #edf6ea;
-  color: #4a7c42;
-  border-color: #c2ddbf;
-  font-weight: 500;
+  background: #d4edcf;
+  color: #2d5e27;
+  border-color: #9dcc97;
+  font-weight: 600;
 }
 
 /* PAGE */
 .page {
   max-width: 680px;
   margin: 0 auto;
-  padding: 24px 20px;
+  padding: 24px 0;
 }
 
 .page-title {
   font-size: 22px;
-  font-weight: 500;
-  color: #3a3228;
+  font-weight: 600;
+  color: #2a2018;
 }
 
 .page-subtitle {
   font-size: 13px;
-  color: #b0a49a;
+  color: #7a6e65;
   margin-top: 4px;
 }
 
@@ -99,8 +103,8 @@ body {
 /* SECTION LABEL */
 .section-label {
   font-size: 11px;
-  font-weight: 500;
-  color: #c0b4aa;
+  font-weight: 600;
+  color: #8a7e75;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin: 20px 0 10px;
@@ -112,18 +116,19 @@ body {
 .section-label::after {
   content: '';
   flex: 1;
-  height: 0.5px;
-  background: #ede5da;
+  height: 1px;
+  background: #d4c9bc;
 }
 
-/* INCOMPLETE HABIT CARD (banner layout) */
+/* INCOMPLETE HABIT CARD */
 .habit-card-incomplete {
   background: white;
-  border: 0.5px solid #ede5da;
+  border: 1px solid #d4c9bc;
   border-radius: 16px;
   margin-bottom: 10px;
   overflow: hidden;
   cursor: pointer;
+  box-shadow: 0 1px 4px rgba(58, 50, 40, 0.06);
 }
 
 .habit-banner {
@@ -158,13 +163,13 @@ body {
 
 .habit-name {
   font-size: 15px;
-  font-weight: 500;
-  color: #3a3228;
+  font-weight: 600;
+  color: #2a2018;
 }
 
 .habit-desc {
   font-size: 12px;
-  color: #b0a49a;
+  color: #7a6e65;
   margin-top: 2px;
 }
 
@@ -178,9 +183,10 @@ body {
 
 .frequency-tag {
   font-size: 11px;
-  padding: 2px 10px;
+  padding: 3px 10px;
   border-radius: 999px;
-  font-weight: 500;
+  font-weight: 600;
+  filter: saturate(1.4) brightness(0.82);
 }
 
 .progress-dots {
@@ -193,11 +199,13 @@ body {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #e8e0d8;
+  background: #c8c0b8;
 }
 
 .progress-count {
   font-size: 11px;
+  font-weight: 600;
+  filter: saturate(1.4) brightness(0.75);
 }
 
 .habit-card-footer {
@@ -211,11 +219,13 @@ body {
   padding: 7px 20px;
   border-radius: 999px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   color: white;
   transition: opacity 0.2s;
+  filter: saturate(1.2) brightness(0.88);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 
 .main-btn:hover {
@@ -231,29 +241,29 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 0.5px solid #e0d9d0;
+  border: 1px solid #d4c9bc;
   background: white;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9a8e85;
+  color: #6a5e55;
   position: relative;
   font-size: 15px;
   transition: background 0.15s;
 }
 
 .icon-btn:hover {
-  background: #f5f0ea;
+  background: #f0e8e0;
 }
 
 .icon-btn.danger {
-  color: #c0504a;
-  border-color: #f0b0b0;
+  color: #a83830;
+  border-color: #e89090;
 }
 
 .icon-btn.danger:hover {
-  background: #fef0f0;
+  background: #fde8e8;
 }
 
 .icon-btn .tooltip {
@@ -262,7 +272,7 @@ body {
   bottom: 38px;
   left: 50%;
   transform: translateX(-50%);
-  background: #3a3228;
+  background: #2a2018;
   color: white;
   font-size: 10px;
   padding: 3px 8px;
@@ -279,7 +289,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   border: 4px solid transparent;
-  border-top-color: #3a3228;
+  border-top-color: #2a2018;
 }
 
 .icon-btn:hover .tooltip {
@@ -295,11 +305,12 @@ body {
 
 .habit-card-completed {
   background: white;
-  border: 0.5px solid #ede5da;
+  border: 1px solid #d4c9bc;
   border-radius: 16px;
   overflow: hidden;
-  opacity: 0.6;
+  opacity: 0.75;
   cursor: pointer;
+  box-shadow: 0 1px 4px rgba(58, 50, 40, 0.06);
 }
 
 .completed-illus {
@@ -315,6 +326,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center center;
 }
 
 .completed-illus-empty {
@@ -328,13 +340,13 @@ body {
 
 .completed-name {
   font-size: 13px;
-  font-weight: 500;
-  color: #3a3228;
+  font-weight: 600;
+  color: #2a2018;
 }
 
 .completed-desc {
   font-size: 11px;
-  color: #b0a49a;
+  color: #7a6e65;
   margin-top: 2px;
 }
 
@@ -364,23 +376,23 @@ body {
   border-radius: 999px;
   font-size: 14px;
   font-weight: 500;
-  border: 1.5px dashed #c2ddbf;
-  background: #f5fbf4;
-  color: #4a7c42;
+  border: 1.5px dashed #9dcc97;
+  background: #edf6ea;
+  color: #2d5e27;
   cursor: pointer;
   margin-top: 24px;
   transition: background 0.2s;
 }
 
 .add-habit-btn:hover {
-  background: #edf6ea;
+  background: #d4edcf;
 }
 
 /* MODAL */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(58, 50, 40, 0.3);
+  background: rgba(58, 50, 40, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -396,7 +408,8 @@ body {
   max-width: 420px;
   max-height: 90vh;
   overflow-y: auto;
-  border: 0.5px solid #ede5da;
+  border: 1px solid #d4c9bc;
+  box-shadow: 0 4px 24px rgba(58, 50, 40, 0.12);
 }
 
 .modal-header {
@@ -408,21 +421,21 @@ body {
 
 .modal-title {
   font-size: 16px;
-  font-weight: 500;
-  color: #3a3228;
+  font-weight: 600;
+  color: #2a2018;
 }
 
 .modal-close {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #f5f0ea;
+  background: #ede5da;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9a8e85;
+  color: #6a5e55;
   font-size: 14px;
 }
 
@@ -436,8 +449,8 @@ body {
 
 .form-label {
   font-size: 11px;
-  color: #9a8e85;
-  font-weight: 500;
+  color: #6a5e55;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -445,15 +458,15 @@ body {
 .form-input {
   padding: 8px 12px;
   border-radius: 10px;
-  border: 0.5px solid #e0d9d0;
+  border: 1px solid #d4c9bc;
   background: #fdf8f2;
   font-size: 13px;
-  color: #3a3228;
+  color: #2a2018;
   outline: none;
 }
 
 .form-input:focus {
-  border-color: #a8d5a2;
+  border-color: #7bc67a;
 }
 
 .form-grid {
@@ -482,7 +495,7 @@ body {
 }
 
 .color-swatch.selected {
-  border-color: #3a3228;
+  border-color: #2a2018;
   transform: scale(1.15);
 }
 
@@ -494,7 +507,7 @@ body {
 
 .illus-option {
   border-radius: 10px;
-  border: 1.5px solid #e0d9d0;
+  border: 1.5px solid #d4c9bc;
   overflow: hidden;
   cursor: pointer;
   height: 70px;
@@ -511,25 +524,25 @@ body {
 }
 
 .illus-option.selected {
-  border-color: #7bc67a;
+  border-color: #4a9e48;
   border-width: 2px;
 }
 
 .illus-upload {
   border-radius: 10px;
-  border: 1.5px dashed #c2ddbf;
+  border: 1.5px dashed #9dcc97;
   height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 12px;
-  color: #7a6e65;
+  color: #2d5e27;
   transition: background 0.15s;
 }
 
 .illus-upload:hover {
-  background: #f5fbf4;
+  background: #edf6ea;
 }
 
 .submit-btn {
@@ -537,9 +550,9 @@ body {
   padding: 10px;
   border-radius: 999px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   border: none;
-  background: #7bc67a;
+  background: #4a9e48;
   color: white;
   cursor: pointer;
   margin-top: 6px;
@@ -550,7 +563,7 @@ body {
   opacity: 0.85;
 }
 
-/* ===== OVERVIEW ===== */
+/* OVERVIEW */
 .overview-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -560,11 +573,12 @@ body {
 
 .overview-card {
   background: white;
-  border: 0.5px solid #ede5da;
+  border: 1px solid #d4c9bc;
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.15s;
+  box-shadow: 0 1px 4px rgba(58, 50, 40, 0.06);
 }
 
 .overview-card:hover {
@@ -594,13 +608,13 @@ body {
 
 .overview-name {
   font-size: 14px;
-  font-weight: 500;
-  color: #3a3228;
+  font-weight: 600;
+  color: #2a2018;
 }
 
 .overview-meta {
   font-size: 11px;
-  color: #b0a49a;
+  color: #7a6e65;
   margin-top: 4px;
 }
 
@@ -615,13 +629,13 @@ body {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 0.5px solid #f0b0b0;
+  border: 1px solid #e89090;
   background: white;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #c0504a;
+  color: #a83830;
   font-size: 13px;
 }
 
@@ -652,27 +666,28 @@ body {
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: #9a8e85;
+  color: #6a5e55;
   background: none;
   border: none;
   cursor: pointer;
   margin-bottom: 16px;
   padding: 0;
+  font-weight: 500;
 }
 
 .back-btn:hover {
-  color: #3a3228;
+  color: #2a2018;
 }
 
 .detail-title {
   font-size: 22px;
-  font-weight: 500;
-  color: #3a3228;
+  font-weight: 600;
+  color: #2a2018;
 }
 
 .detail-meta {
   font-size: 13px;
-  color: #b0a49a;
+  color: #7a6e65;
   margin-top: 4px;
 }
 
@@ -687,7 +702,8 @@ body {
   padding: 6px 16px;
   border-radius: 999px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
+  filter: saturate(1.3) brightness(0.8);
 }
 
 .history-list {
@@ -697,9 +713,9 @@ body {
 
 .history-list li {
   padding: 10px 0;
-  border-bottom: 0.5px solid #ede5da;
+  border-bottom: 0.5px solid #d4c9bc;
   font-size: 13px;
-  color: #6a5e55;
+  color: #4a3e35;
 }
 
 .history-list li:last-child {
@@ -708,8 +724,8 @@ body {
 
 .section-title {
   font-size: 15px;
-  font-weight: 500;
-  color: #3a3228;
+  font-weight: 600;
+  color: #2a2018;
   margin-top: 24px;
   margin-bottom: 4px;
 }
@@ -717,10 +733,11 @@ body {
 /* CALENDAR */
 .calendar {
   background: white;
-  border: 0.5px solid #ede5da;
+  border: 1px solid #d4c9bc;
   border-radius: 16px;
   padding: 16px;
   margin-top: 10px;
+  box-shadow: 0 1px 4px rgba(58, 50, 40, 0.06);
 }
 
 .cal-header {
@@ -732,26 +749,26 @@ body {
 
 .cal-title {
   font-size: 14px;
-  font-weight: 500;
-  color: #3a3228;
+  font-weight: 600;
+  color: #2a2018;
 }
 
 .cal-arrow {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 0.5px solid #e0d9d0;
+  border: 1px solid #d4c9bc;
   background: white;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9a8e85;
+  color: #6a5e55;
   font-size: 14px;
 }
 
 .cal-arrow:hover {
-  background: #f5f0ea;
+  background: #f0e8e0;
 }
 
 .cal-grid {
@@ -763,8 +780,8 @@ body {
 .day-label {
   text-align: center;
   font-size: 10px;
-  font-weight: 500;
-  color: #c0b4aa;
+  font-weight: 600;
+  color: #8a7e75;
   padding: 4px 0;
   letter-spacing: 0.05em;
 }
@@ -776,7 +793,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  color: #9a8e85;
+  color: #6a5e55;
 }
 
 .cal-legend {
@@ -792,7 +809,7 @@ body {
   align-items: center;
   gap: 5px;
   font-size: 11px;
-  color: #9a8e85;
+  color: #6a5e55;
 }
 
 .legend-dot {
@@ -807,7 +824,7 @@ body {
   font-size: 11px;
   padding: 2px 10px;
   border-radius: 999px;
-  background: #fef5e0;
-  color: #8c5a10;
-  font-weight: 500;
+  background: #fde8b8;
+  color: #7a4a08;
+  font-weight: 600;
 }

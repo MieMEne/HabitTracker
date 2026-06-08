@@ -3,7 +3,7 @@ import axios from "axios";
 import HabitCard from "../components/HabitCard";
 import AddHabitForm from "../components/AddHabitForm";
 
-function isDueToday(habit, completions) {
+function isDueToday(habit, completions, todayCompletionCount) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -28,16 +28,35 @@ function isDueToday(habit, completions) {
   switch (habit.frequency) {
     case "daily":
       return true;
+
     case "every other day":
       return daysSinceCreation % 2 === 0;
+
     case "every 4 days":
       return daysSinceCreation % 4 === 0;
-    case "weekly":
-      if (daysSinceLastCompletion === null) return daysSinceCreation >= 7 || daysSinceCreation === 0;
-      return daysSinceLastCompletion >= 7;
-    case "monthly":
-      if (daysSinceLastCompletion === null) return daysSinceCreation >= 30 || daysSinceCreation === 0;
-      return daysSinceLastCompletion >= 30;
+
+    case "weekly": {
+      const startOfCurrentWeek = new Date(today);
+      startOfCurrentWeek.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+      startOfCurrentWeek.setHours(0, 0, 0, 0);
+      const completionsThisWeek = completions.filter((c) => {
+        const d = new Date(c.completed_at.replace(" ", "T"));
+        d.setHours(0, 0, 0, 0);
+        return d >= startOfCurrentWeek;
+      });
+      return completionsThisWeek.length < habit.times_per_day;
+    }
+
+    case "monthly": {
+      const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const completionsThisMonth = completions.filter((c) => {
+        const d = new Date(c.completed_at.replace(" ", "T"));
+        d.setHours(0, 0, 0, 0);
+        return d >= startOfCurrentMonth;
+      });
+      return completionsThisMonth.length < habit.times_per_day;
+    }
+
     default:
       return true;
   }
@@ -109,18 +128,51 @@ function Today() {
   }, []);
 
   const dueToday = habits.filter(
-    (habit) =>
-      isDueToday(habit, allCompletions[habit.id] || []) &&
-      !skippedIds.includes(habit.id)
-  );
+  (habit) =>
+    isDueToday(habit, allCompletions[habit.id] || [], todayCompletions[habit.id] || 0) &&
+    !skippedIds.includes(habit.id)
+);
 
   const incomplete = dueToday.filter(
-    (habit) => (todayCompletions[habit.id] || 0) < habit.times_per_day
-  );
+  (habit) => (todayCompletions[habit.id] || 0) < habit.times_per_day
+);
 
-  const completed = dueToday.filter(
-    (habit) => (todayCompletions[habit.id] || 0) >= habit.times_per_day
-  );
+const completed = dueToday.filter(
+  (habit) => (todayCompletions[habit.id] || 0) >= habit.times_per_day
+);
+
+const completedPeriodic = habits.filter((habit) => {
+  if (skippedIds.includes(habit.id)) return false;
+  if (habit.frequency !== "weekly" && habit.frequency !== "monthly") return false;
+
+  const allHabitCompletions = allCompletions[habit.id] || [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (habit.frequency === "weekly") {
+    const startOfCurrentWeek = new Date(today);
+    startOfCurrentWeek.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+    startOfCurrentWeek.setHours(0, 0, 0, 0);
+    const completionsThisWeek = allHabitCompletions.filter((c) => {
+      const d = new Date(c.completed_at.replace(" ", "T"));
+      d.setHours(0, 0, 0, 0);
+      return d >= startOfCurrentWeek;
+    });
+    return completionsThisWeek.length >= habit.times_per_day;
+  }
+
+  if (habit.frequency === "monthly") {
+    const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const completionsThisMonth = allHabitCompletions.filter((c) => {
+      const d = new Date(c.completed_at.replace(" ", "T"));
+      d.setHours(0, 0, 0, 0);
+      return d >= startOfCurrentMonth;
+    });
+    return completionsThisMonth.length >= habit.times_per_day;
+  }
+
+  return false;
+});
 
   return (
     <div className="page">
@@ -128,10 +180,10 @@ function Today() {
         {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}
       </div>
       <div className="page-subtitle">
-        {completed.length} of {dueToday.length} habits done today
+        {completed.length + completedPeriodic.length} of {dueToday.length + completedPeriodic.length} habits done today
       </div>
 
-      {dueToday.length === 0 ? (
+      {dueToday.length === 0 && completedPeriodic.length === 0 ? (
         <p style={{ marginTop: "20px", color: "#b0a49a" }}>No habits due today — enjoy your rest!</p>
       ) : (
         <>
@@ -151,11 +203,22 @@ function Today() {
               ))}
             </div>
           )}
-          {completed.length > 0 && (
+          {(completed.length > 0 || completedPeriodic.length > 0) && (
             <div>
               <div className="section-label">Completed</div>
               <div className="completed-grid">
                 {completed.map((habit) => (
+                  <HabitCard
+                    key={habit.id}
+                    habit={habit}
+                    completedCount={todayCompletions[habit.id] || 0}
+                    isCompleted={true}
+                    onComplete={handleRefresh}
+                    onDelete={handleRefresh}
+                    onSkip={handleRefresh}
+                  />
+                ))}
+                {completedPeriodic.map((habit) => (
                   <HabitCard
                     key={habit.id}
                     habit={habit}

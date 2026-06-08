@@ -100,7 +100,7 @@ function EditHabitForm({ habit, onHabitUpdated, onClose }) {
               </select>
             </div>
             <div className="form-field">
-              <label className="form-label">Times per day</label>
+              <label className="form-label">Amount of times</label>
               <input
                 className="form-input"
                 type="number"

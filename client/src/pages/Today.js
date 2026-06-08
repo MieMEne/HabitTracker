@@ -124,20 +124,20 @@ function Today() {
   }, []);
 
   useEffect(() => {
-  let lastDate = new Date().toLocaleDateString();
+    let lastDate = new Date().toLocaleDateString();
 
-  const interval = setInterval(() => {
-    const currentDate = new Date().toLocaleDateString();
-    if (currentDate !== lastDate) {
-      lastDate = currentDate;
-      handleRefresh();
-    } else {
-      handleRefresh();
-    }
-  }, 60000);
+    const interval = setInterval(() => {
+      const currentDate = new Date().toLocaleDateString();
+      if (currentDate !== lastDate) {
+        lastDate = currentDate;
+        handleRefresh();
+      } else {
+        handleRefresh();
+      }
+    }, 60000);
 
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
 
   const dueToday = habits.filter(
     (habit) =>
@@ -154,40 +154,40 @@ function Today() {
   );
 
   const completedPeriodic = habits.filter((habit) => {
-  if (skippedIds.includes(habit.id)) return false;
-  if (habit.frequency !== "weekly" && habit.frequency !== "monthly") return false;
+    if (skippedIds.includes(habit.id)) return false;
+    if (habit.frequency !== "weekly" && habit.frequency !== "monthly") return false;
 
-  const toLocal = (dateStr) =>
-    new Date(new Date(dateStr.replace(" ", "T")).toLocaleString("en-US", { timeZone: "Europe/Copenhagen" }));
+    const toLocal = (dateStr) =>
+      new Date(new Date(dateStr.replace(" ", "T")).toLocaleString("en-US", { timeZone: "Europe/Copenhagen" }));
 
-  const allHabitCompletions = allCompletions[habit.id] || [];
-  const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Europe/Copenhagen" }));
-  today.setHours(0, 0, 0, 0);
+    const allHabitCompletions = allCompletions[habit.id] || [];
+    const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Europe/Copenhagen" }));
+    today.setHours(0, 0, 0, 0);
 
-  if (habit.frequency === "weekly") {
-    const startOfCurrentWeek = new Date(today);
-    startOfCurrentWeek.setDate(today.getDate() - ((today.getDay() + 6) % 7));
-    startOfCurrentWeek.setHours(0, 0, 0, 0);
-    const completionsThisWeek = allHabitCompletions.filter((c) => {
-      const d = toLocal(c.completed_at);
-      d.setHours(0, 0, 0, 0);
-      return d >= startOfCurrentWeek;
-    });
-    return completionsThisWeek.length >= habit.times_per_day;
-  }
+    if (habit.frequency === "weekly") {
+      const startOfCurrentWeek = new Date(today);
+      startOfCurrentWeek.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+      startOfCurrentWeek.setHours(0, 0, 0, 0);
+      const completionsThisWeek = allHabitCompletions.filter((c) => {
+        const d = toLocal(c.completed_at);
+        d.setHours(0, 0, 0, 0);
+        return d >= startOfCurrentWeek;
+      });
+      return completionsThisWeek.length >= habit.times_per_day;
+    }
 
-  if (habit.frequency === "monthly") {
-    const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const completionsThisMonth = allHabitCompletions.filter((c) => {
-      const d = toLocal(c.completed_at);
-      d.setHours(0, 0, 0, 0);
-      return d >= startOfCurrentMonth;
-    });
-    return completionsThisMonth.length >= habit.times_per_day;
-  }
+    if (habit.frequency === "monthly") {
+      const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const completionsThisMonth = allHabitCompletions.filter((c) => {
+        const d = toLocal(c.completed_at);
+        d.setHours(0, 0, 0, 0);
+        return d >= startOfCurrentMonth;
+      });
+      return completionsThisMonth.length >= habit.times_per_day;
+    }
 
-  return false;
-});
+    return false;
+  });
 
   return (
     <div className="page">
@@ -210,7 +210,10 @@ function Today() {
       )}
 
       {dueToday.length === 0 && completedPeriodic.length === 0 ? (
-        <p style={{ marginTop: "20px", color: "#b0a49a" }}>No habits due today — enjoy your rest!</p>
+        <div className="empty-state">
+          <p className="empty-title">No habits due today!</p>
+          <p className="empty-subtitle">Enjoy your rest or add a new habit above.</p>
+        </div>
       ) : (
         <>
           {incomplete.length > 0 && (

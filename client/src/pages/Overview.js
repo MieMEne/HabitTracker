@@ -108,9 +108,10 @@ function Overview() {
       <div className="page-title">Overview</div>
       <div className="page-subtitle">{habits.length} habits tracked</div>
       {habits.length === 0 ? (
-        <p style={{ marginTop: "20px", color: "#b0a49a" }}>
-          No habits yet — add one on the Today page!
-        </p>
+        <div className="empty-state">
+          <p className="empty-title">No habits yet!</p>
+          <p className="empty-subtitle">Head to the Today page to add your first habit.</p>
+        </div>
       ) : (
         <div className="overview-grid">
           {habits.map((habit) => (

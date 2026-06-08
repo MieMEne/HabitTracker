@@ -826,3 +826,25 @@ body {
   color: #7a4a08;
   font-weight: 600;
 }
+
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 16px;
+  border: 1px dashed #d4c9bc;
+  margin-top: 20px;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2a2018;
+  margin-bottom: 8px;
+}
+
+.empty-subtitle {
+  font-size: 13px;
+  color: #7a6e65;
+}
